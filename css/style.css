@@ -3,6 +3,17 @@ body {
   text-align: center;
 }
 
+.players-panel{
+  display: inline-block;
+  padding-right: 10px;
+}
+
+#round-color{
+  height: 30px;
+  width: 30px;
+}
+
+
 h1.title{
 	font-size: 35px;
 	color: white;
