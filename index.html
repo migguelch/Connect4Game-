@@ -6,24 +6,38 @@
   <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet">
 </head>
 <body>
+  <!------------------------------------------------------------------------------------------------->
+  <div class = "separator"><p>&nbsp</p></div>
+  <div>
+    <h1 class="gameTitle" >Connect four Game.</h1>
+  </div>
+  <!------------------------------------------------------------------------------------------------->  
+    <div class="players-panel"><h2>Player A</h2></div>
+    <div class="players-panel"><input id="round-color" type="color" name="colorPlayerOne" value="#000000" onchange="mang.setColorValue(this);"></div>
+    <div class="players-panel"><h2>Player B</h2></div>
+    <div class="players-panel"><input id="round-color" type="color" name="colorPlayerTwo" value="#ff0000" onchange="mang.setColorValue(this);"></div>
+    <div class="players-panel"><h2>Board</h2></div>
+    <div class="players-panel"><input id="round-color" type="color" name="colorBoard"  value="#5c6464" onchange="mang.setColorValue(this);"></div>
+  <!-------------------------------------------------------------------------------------------------->
   <div class = "separator"><p>&nbsp</p></div>
 
-  <div>
-    <h1 class = "title">Connect Four Game.</h1>    
-  </div>
-
   <div >
-    <h2 class = "player" id = "player"> Player: BLACK </h2>
+    <h2 class = "player" id = "player"> Player: </h2>
   </div>
-
+  
   <div class="turn">
     <p id="turn">Turn: 1</p>
   </div>  
 
   <div class="reset-game">
-    <a href="#" id="reset-btn" class="reset-game-bn" onclick="board.resetGame()">Reset the Game</a>
+    <a href="#" id="reset-btn" class="reset-game-bn" onclick="mang.resetGame()">Reset the Game</a>
   </div>
-  
+  <div class = "separator"><p>&nbsp</p></div>
+  <div >
+    <h2 id = "player">Scores:</h2>
+    <h2 class = "score-panel" id = "player_a">Player A:</h2>
+    <h2 class = "score-panel" id = "player_b">Player B:</h2>
+  </div>
   <div class = "separator"><p>&nbsp</p></div>
 
 <div>
@@ -89,5 +103,12 @@
   <p>&nbsp</p> 
 </div>
 <script src="js/code.js"></script>
+<script language="javascript">
+  function afterPageLoad(){
+    mang.startGame();
+  }
+
+  window.onload = afterPageLoad;
+</script>
 </body>
 </html>

@@ -1,32 +1,46 @@
-
 var stat = {
 	// Global config
 	config : {
-		startingPlayer:"black",
-		takenMsg: "This position is already taken.",
+			startingPlayer:"black",
+			takenMsg: "This position is already taken.",
   		evenMsg: "the game is tied.",
   		winMsg: "The winner is the Player COLOR",
   		target: 4,
   		boardLength: 7,
   		boardHeight: 6,
 	},
-	turns: 1,
-	currentPlayer : "black",
+
+	//Players.
+	players : [
+		'',
+		playerA = {
+				name: "Player A",
+				color: "#000000",
+				score: 0
+		},
+		playerB = {
+				name: "Player B",
+				color:"#FF0000",
+				score: 0 
+		}],
+	turns: 0,
+	currentPlayer : 0,
+	currentPlayerDisplay : '',
+
 	// Global State
 	board : [[0,0,0,0,0,0,0],
 	         [0,0,0,0,0,0,0],
 	         [0,0,0,0,0,0,0],
 	         [0,0,0,0,0,0,0],
 	         [0,0,0,0,0,0,0],
-	         [0,0,0,0,0,0,0]],
+	         [0,0,0,0,0,0,0]],	         
 
 	choseGamer: function(){
-		return (Math.floor(Math.random()*100)%2) == 0? "black":"red";
+		return Math.floor(Math.random()*100)%2 + 1;
 	}
 };
 
 stat.setCell = function(col,row){
-
 	stat.board[row][col] = stat.currentPlayer;
 }
 
@@ -51,26 +65,39 @@ stat.countTurns = function(){
 	stat.turns ++;
 }
 
-stat.changeGamer = function(){
-	stat.currentPlayer = (stat.currentPlayer === 'black') ? 'red' : 'black';  
+stat.changeGamer = function(){	
+	stat.currentPlayer = (stat.currentPlayer === 1) ? 2 : 1;
+	stat.currentPlayerDisplay = stat.players[stat.currentPlayer].name;
 }
 
 stat.resetGame = function(){
 	location.reload();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////
-var board = {};
 
-board.printBoard = function(){
+stat.saveColors = function(index, color){
+	stat.players[index].color = color;
+}
+
+stat.addScore = function(player){
+	stat.players[player].score++;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+var board = {
+	color : ''
+};
+
+board.printBoard = function(){	
 	var cell,color;
 	
 	for (var d_row = 0; d_row < stat.board.length ;d_row++) {
       for (var d_col = 0; d_col < stat.board[0].length; d_col++){      	
-      	      	
+      	cell = "cell"+((7*d_row)+d_col)	;
       	if (stat.board[d_row][d_col] != 0){
-      		cell = "cell"+((7*d_row)+d_col)	;
-      		color = stat.board[d_row][d_col]
-      		document.getElementById(cell).style.backgroundColor = color;
+      		color = stat.players[stat.board[d_row][d_col]].color;
+      		document.getElementById(cell).style.backgroundColor = color; 
+      	}
+      	else{
+      		document.getElementById(cell).style.backgroundColor = "#D4D4D4"; 
       	}      	
       }
 	}
@@ -78,8 +105,8 @@ board.printBoard = function(){
 
 board.printCell = function(cel,col,row){
 	var cell,color;
-	cell  = "cell"+((7*row)+col);
-	color = color = stat.board[row][col];
+	cell  = "cell"+((7*row)+col);	
+	color = stat.players[stat.board[row][col]].color;
 	document.getElementById(cell).style.backgroundColor = color;
 }
 
@@ -89,13 +116,18 @@ board.setTurn = function(){
 }
 
 board.setPlayer = function (){
-	var notify = "Player: " + stat.currentPlayer.toUpperCase();
+	var notify = "Player: " + stat.currentPlayerDisplay.toUpperCase();
 	document.getElementById("player").innerHTML = notify;
 }
 
-board.resetGame = function (){
-	if(confirm("Reset the Game")){
-		stat.resetGame();}
+board.setscore = function(){
+	document.getElementById("player_a").innerHTML = stat.players[1].name + ": " + stat.players[1].score;
+	document.getElementById("player_b").innerHTML = stat.players[2].name + ": " + stat.players[2].score;
+}
+
+board.setcolorBoard = function(){	
+	color = board.color;
+	document.getElementById("board").style.backgroundColor = color;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 var ctrl = {};
@@ -194,7 +226,7 @@ var mang  = {};
 
 mang.selectedCell = function (cel){
 
-	var player = stat.currentPlayer;
+	var player = stat.currentPlayerDisplay;
 	var row = Math.floor(cel/7);
 	var col = cel%7;
 
@@ -211,20 +243,35 @@ mang.selectedCell = function (cel){
 	board.printCell(cel,col,dropRow);
 	//chageGamer
 
-
-	if (ctrl.isHortWin()){
-		if(confirm(stat.config.winMsg.replace('COLOR',stat.currentPlayer.toUpperCase()))){
+	if(ctrl.isHortWin() || ctrl.isVertWin() || ctrl.isDiagWin()){
+		stat.addScore(stat.currentPlayer);
+		if(confirm(stat.config.winMsg.replace('COLOR',stat.currentPlayerDisplay.toUpperCase()))){
+			mang.startGame();
+		}
+	} 
+	else if (stat.turns === 42){
+		if(confirm(stat.config.evenMsg)){
 			stat.resetGame();
 		}
 	}
+
+	/*
+	if (ctrl.isHortWin()){
+		stat.addScore(stat.currentPlayer);
+		if(confirm(stat.config.winMsg.replace('COLOR',stat.currentPlayerDisplay.toUpperCase()))){
+			mang.startGame();
+		}
+	}
 	else if (ctrl.isVertWin()){
-		if(confirm(stat.config.winMsg.replace('COLOR',stat.currentPlayer.toUpperCase()))){
-			stat.resetGame();
+		stat.addScore(stat.currentPlayer);
+		if(confirm(stat.config.winMsg.replace('COLOR',stat.currentPlayerDisplay.toUpperCase()))){
+			mang.startGame();
 		}	
 	}
 	else if (ctrl.isDiagWin()){
-		if(confirm(stat.config.winMsg.replace('COLOR',stat.currentPlayer.toUpperCase()))){
-			stat.resetGame();
+		stat.addScore(stat.currentPlayer);
+		if(confirm(stat.config.winMsg.replace('COLOR',stat.currentPlayerDisplay.toUpperCase()))){
+			mang.startGame();
 		}
 	}
 	else if (stat.turns === 42){
@@ -232,13 +279,54 @@ mang.selectedCell = function (cel){
 			stat.resetGame();
 		}
 
-	}
+	}*/
 	stat.changeGamer();
 	stat.countTurns();
 
 	board.setPlayer();
 	board.setTurn();
-
-
+	board.setscore();
 }
 
+mang.setColorValue = function(colorPicker){
+	
+	switch(colorPicker.name){
+		case "colorPlayerOne":
+			stat.saveColors(1, colorPicker.value);
+			board.printBoard();
+			break;
+		case "colorPlayerTwo":
+			stat.saveColors(2, colorPicker.value);
+			board.printBoard();
+			break;
+		case "colorBoard":			
+			board.color = colorPicker.value;
+			board.setcolorBoard();
+			break;
+		default:
+			//pass
+	}				
+}
+
+mang.startGame = function(){
+ 	stat.currentPlayer = stat.choseGamer();
+	stat.currentPlayerDisplay = stat.players[stat.currentPlayer].name;
+	stat.turns = 1;
+	stat.board = [[0,0,0,0,0,0,0],
+	         			[0,0,0,0,0,0,0],
+	         			[0,0,0,0,0,0,0],
+	         			[0,0,0,0,0,0,0],
+	         			[0,0,0,0,0,0,0],
+	         			[0,0,0,0,0,0,0]]
+	board.setTurn();
+	board.setPlayer();
+	board.setscore();
+	board.printBoard();
+
+ }
+
+mang.resetGame = function(){
+	if(confirm("Do you Really want to Reset the Game?")){
+		mang.startGame();
+	}
+}

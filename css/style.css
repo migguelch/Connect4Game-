@@ -1,24 +1,46 @@
 body {
-  background-color: #414649;
+  /*background-color:*//*#414649*//*#b4b4bb;*/
   font-family: 'Ubuntu', 'Helvetica Neue', sans-serif;
   text-align: center;
 }
 
+.players-panel{
+  display: inline-block;
+  padding-right: 10px;
+}
+
+.score-panel{
+  display: inline-block;
+  padding-right: 50px;
+}
+
+#round-color{
+  height: 30px;
+  width: 30px;
+}
+
+h1.gameTitle{
+  font-size: 60px;
+  color: black;
+  text-align: center;
+  background-color: white;
+}
+
 h1.title{
 	font-size: 35px;
-	color: white;
-  	text-align: center;
+	color: black;
+  text-align: center;
 }
 
 h2.player{ 
 	font-size: 25px;
-	color: white;
+	color: black;
 	text-align: center;
 }
 
 #turn {
   font-size: 25px;
-  color: white;
+  color: black;
   text-align: center;
 }
 
@@ -34,7 +56,7 @@ h2.player{
   height: 40px;
   line-height: 40px;
   width: 30%;
-  background: #614b26;
+  background: gray;
   color: white;
   text-align: center;
 }
@@ -64,4 +86,5 @@ div.separator{
 
 #board{
     margin: auto;
+    background: #5c6464;
 }
